@@ -8,6 +8,8 @@ data class ProfileResponse(val username: String,
                            val telephone: String?,
                            val dateOfBirth: Date?)
 
+data class SecretResponse(val secret: String)
+
 data class TicketResponse(val sub: Long,
                               val zId: String,
                               val iat: String,

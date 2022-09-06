@@ -4,10 +4,6 @@ import io.github.g0dkar.qrcode.QRCode
 import it.polito.wa2.g07.travelerservice.dtos.UserDetailsDTO
 import it.polito.wa2.g07.travelerservice.services.AdminService
 import it.polito.wa2.g07.travelerservice.services.UserService
-import it.polito.wa2.g07.travelerservice.utils.BuyTicketRequest
-import it.polito.wa2.g07.travelerservice.utils.ProfileResponse
-import it.polito.wa2.g07.travelerservice.utils.TicketResponse
-import it.polito.wa2.g07.travelerservice.utils.UpdateProfileData
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
@@ -17,6 +13,7 @@ import org.springframework.http.HttpHeaders.CONTENT_DISPOSITION
 import org.springframework.http.MediaType.IMAGE_PNG_VALUE
 import org.springframework.http.ResponseEntity
 import com.google.gson.Gson
+import it.polito.wa2.g07.travelerservice.utils.*
 import org.springframework.http.MediaType
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
@@ -25,10 +22,16 @@ import javax.imageio.ImageIO
 class TravelerController(val userService: UserService, val adminService: AdminService ) {
 
 
-    @GetMapping(value = ["/secret"],produces = [MediaType.APPLICATION_NDJSON_VALUE])
+    @GetMapping(value = ["/secret"])
     @ResponseStatus(HttpStatus.OK)
-    fun getSecret(): String {
-        return userService.getSecret()
+    fun getSecret(): SecretResponse {
+        try {
+            val s = userService.getSecret()
+            return SecretResponse(secret = s)
+        }
+        catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        }
     }
 
     @GetMapping("/my/profile")
